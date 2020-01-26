@@ -1,0 +1,9 @@
+.dockerignore
+.git
+.gitignore
+cypress
+cypress.json
+Dockerfile
+LICENSE
+node_modules
+README.md
