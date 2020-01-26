@@ -15,7 +15,7 @@ kc.loadFromCluster();
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
 k8sApi
-  .listNamespacedPod("default")
+  .listPodForAllNamespaces()
   .then(res => {
     console.log(res.body);
   })
