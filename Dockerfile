@@ -25,10 +25,10 @@ RUN adduser -D ablab
 
 WORKDIR /app
 
-COPY --from=builder /app/__sapper__ ./__sapper__/
 COPY --from=builder /app/node_modules ./node_modules/
 COPY --from=builder  /app/static/ ./static/
 COPY --from=builder /app/package* ./
+COPY --from=builder /app/__sapper__ ./__sapper__/
 
 USER ablab
 
