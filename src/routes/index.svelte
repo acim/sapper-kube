@@ -4,11 +4,17 @@
   let data;
 
   onMount(() => {
-    data = fetch("pods", {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+    try {
+      data = JSON.parse(
+        fetch("pods", {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
   });
 </script>
 
@@ -17,7 +23,7 @@
 </svelte:head>
 
 <ul>
-{#each JSON.parse(data) as item}
-<li>item.name</li>
-{/each}
+  {#each data as item}
+    <li>item.name</li>
+  {:else}No items{/each}
 </ul>
