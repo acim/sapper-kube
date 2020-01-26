@@ -3,6 +3,7 @@
 .gitignore
 cypress
 cypress.json
+deploy
 Dockerfile
 LICENSE
 node_modules
