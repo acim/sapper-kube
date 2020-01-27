@@ -1,20 +1,25 @@
 <script>
   import { onMount } from "svelte";
 
-  let data;
+  let items = [];
+  let error;
+
+  const request = async () => {
+    try {
+      const response = await fetch("pods", {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      items = await response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   onMount(() => {
-    try {
-      data = JSON.parse(
-        fetch("pods", {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-      );
-    } catch (e) {
-      console.log(e);
-    }
+    request();
+    console.log(items);
   });
 </script>
 
@@ -23,7 +28,11 @@
 </svelte:head>
 
 <ul>
-  {#each data as item}
-    <li>item.name</li>
+  {#each items as item}
+    <li>{item.metadata.name}</li>
   {:else}No items{/each}
 </ul>
+
+{#if error}
+{error}
+{/if}

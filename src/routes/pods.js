@@ -11,9 +11,9 @@ export function get(req, res) {
   k8sApi
     .listPodForAllNamespaces()
     .then(r => {
-      res.end(JSON.stringify(r.body.items));
+      res.json(r.body.items);
     })
     .catch(err => {
-      res.end(JSON.stringify({ error: err }));
+      res.json({ error: err });
     });
 }

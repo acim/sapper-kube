@@ -2,11 +2,13 @@ import sirv from "sirv";
 import express from "express";
 import compression from "compression";
 import * as sapper from "@sapper/server";
+import morgan from "morgan";
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
 
 express()
+  .use(morgan("common"))
   .use(
     compression({ threshold: 0 }),
     sirv("static", { dev }),
