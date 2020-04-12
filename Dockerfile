@@ -1,39 +1,34 @@
-FROM node:12 AS builder
+FROM mhart/alpine-node:12 AS build
 
 WORKDIR /app
-
-COPY package.json package-lock.json ./
-
-RUN npm ci
-
 COPY . .
 
+RUN npm ci
 RUN npm run build
 
-RUN npm prune --production
-RUN curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash -s -- -b /usr/local/bin
-RUN node-prune
+FROM mhart/alpine-node:12 AS prod
 
-FROM node:12-alpine
+WORKDIR /app
+COPY package.json package-lock.json ./
+
+RUN npm ci --production
+
+FROM mhart/alpine-node:slim-12
 
 LABEL org.label-schema.name="sapper-kube" \
     org.label-schema.vendor="ablab.io"
-
-ENV NODE_ENV production
 
 RUN adduser -D ablab
 
 WORKDIR /app
 
-COPY --from=builder /app/node_modules ./node_modules/
-COPY --from=builder  /app/static/ ./static/
-COPY --from=builder /app/package* ./
-COPY --from=builder /app/__sapper__ ./__sapper__/
+COPY --from=build /app/__sapper__/build __sapper__/build
+COPY --from=build /app/static static
+COPY --from=prod /app .
 
 USER ablab
 
 EXPOSE 3000
 
-ENTRYPOINT ["npm"]
-
-CMD ["run", "start"]
+ENTRYPOINT ["node"]
+CMD ["__sapper__/build"]
